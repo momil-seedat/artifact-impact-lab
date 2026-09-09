@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+artifacts.png
+semantic_impact_*.json
+embedding_impact_*.json
+graph_propagation_impact_*.json
+comparison_*.json
+comparison_*.md
+evaluation_results.json
+evaluation_results.md
+paper/

@@ -1,0 +1,17 @@
+{
+  "id": "scenario_5",
+  "title": "Requirement Change (retry)",
+  "change_type": "requirement",
+  "changed": "R2",
+  "change_description": "Payments must be retried",
+  "source": "constructed from dependency structure; edit to taste",
+  "actual_impact": [
+    "payment.retry.count",
+    "payment_service.processPayment",
+    "payment_service.loadConfig",
+    "payment_service._callGateway",
+    "order_service.completeOrder",
+    "test_payment.test_process_payment",
+    "test_order.test_complete_order"
+  ]
+}

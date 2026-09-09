@@ -1,0 +1,15 @@
+{
+  "id": "scenario_3",
+  "title": "Function Change",
+  "change_type": "service",
+  "changed": "payment_service.processPayment",
+  "change_description": "payment_service.processPayment",
+  "source": "ground-truth labelled by author",
+  "actual_impact": [
+    "payment_service._callGateway",
+    "order_service.completeOrder",
+    "test_payment.test_process_payment",
+    "test_payment.test_process_payment_uses_timeout",
+    "test_order.test_complete_order"
+  ]
+}

@@ -1,0 +1,8 @@
+# Runtime/test deps for the lab.
+# extract_artifacts.py and semantic_impact.py need NOTHING (stdlib only).
+# These are only for the embedding-based approach (embedding_impact.py).
+
+pytest
+sentence-transformers
+scikit-learn
+numpy

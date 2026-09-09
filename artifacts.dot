@@ -1,0 +1,31 @@
+digraph artifacts {
+  rankdir=LR;
+  node [fontname="Helvetica"];
+  "R1" [label="R1\nR1 — Payment must time out", shape=box, style=filled, fillcolor="#cfe8ff"];
+  "R2" [label="R2\nR2 — Payments must be retried", shape=box, style=filled, fillcolor="#cfe8ff"];
+  "R3" [label="R3\nR3 — Payments target a configured gateway", shape=box, style=filled, fillcolor="#cfe8ff"];
+  "order_service.completeOrder" [label="order_service.completeOrder\ncompleteOrder", shape=ellipse, style=filled, fillcolor="#d5e8d4"];
+  "payment.gateway.url" [label="payment.gateway.url\npayment.gateway.url", shape=note, style=filled, fillcolor="#fff2cc"];
+  "payment.retry.count" [label="payment.retry.count\npayment.retry.count", shape=note, style=filled, fillcolor="#fff2cc"];
+  "payment.timeout" [label="payment.timeout\npayment.timeout", shape=note, style=filled, fillcolor="#fff2cc"];
+  "payment_service._callGateway" [label="payment_service._callGateway\n_callGateway", shape=ellipse, style=filled, fillcolor="#d5e8d4"];
+  "payment_service.loadConfig" [label="payment_service.loadConfig\nloadConfig", shape=ellipse, style=filled, fillcolor="#d5e8d4"];
+  "payment_service.processPayment" [label="payment_service.processPayment\nprocessPayment", shape=ellipse, style=filled, fillcolor="#d5e8d4"];
+  "test_order.test_complete_order" [label="test_order.test_complete_order\ntest_complete_order", shape=hexagon, style=filled, fillcolor="#f8cecc"];
+  "test_payment.test_process_payment" [label="test_payment.test_process_payment\ntest_process_payment", shape=hexagon, style=filled, fillcolor="#f8cecc"];
+  "test_payment.test_process_payment_uses_timeout" [label="test_payment.test_process_payment_uses_timeout\ntest_process_payment_uses_timeout", shape=hexagon, style=filled, fillcolor="#f8cecc"];
+  "R1" -> "payment.timeout" [label="requirement to config"];
+  "R2" -> "payment.retry.count" [label="requirement to config"];
+  "R3" -> "payment.gateway.url" [label="requirement to config"];
+  "order_service.completeOrder" -> "payment_service.processPayment" [label="service to service"];
+  "payment.retry.count" -> "payment_service.processPayment" [label="config to service"];
+  "payment.timeout" -> "payment_service.processPayment" [label="config to service"];
+  "payment.gateway.url" -> "payment_service.processPayment" [label="config to service"];
+  "payment_service.processPayment" -> "payment_service._callGateway" [label="service to service"];
+  "payment_service.processPayment" -> "payment_service.loadConfig" [label="service to service"];
+  "test_order.test_complete_order" -> "order_service.completeOrder" [label="test to service"];
+  "test_payment.test_process_payment" -> "payment_service.processPayment" [label="test to service"];
+  "test_payment.test_process_payment" -> "payment_service.loadConfig" [label="test to service"];
+  "test_payment.test_process_payment_uses_timeout" -> "payment_service.processPayment" [label="test to service"];
+  "test_payment.test_process_payment_uses_timeout" -> "payment_service.loadConfig" [label="test to service"];
+}

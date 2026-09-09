@@ -1,0 +1,47 @@
+name: Embedding impact
+
+# Manual, on-demand run of the transformer embedding ranker.
+# Kept separate from ci.yml because it installs heavy deps (torch /
+# sentence-transformers) and downloads the model from huggingface.co.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Artifact id that changed (e.g. R1, payment.timeout)"
+        required: true
+        default: "R1"
+      top:
+        description: "Show only the top N results (blank = all)"
+        required: false
+        default: ""
+
+jobs:
+  embedding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build the artifact graph
+        run: python3 extract_artifacts.py
+
+      - name: Run embedding impact ranking
+        run: |
+          ARGS="--target '${{ inputs.target }}'"
+          if [ -n "${{ inputs.top }}" ]; then ARGS="$ARGS --top ${{ inputs.top }}"; fi
+          eval python3 embedding_impact.py $ARGS
+
+      - name: Upload ranked results
+        uses: actions/upload-artifact@v4
+        with:
+          name: embedding-impact
+          path: embedding_impact_*.json

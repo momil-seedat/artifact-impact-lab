@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pytest numpy
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Extract artifact dependencies
+        run: python3 extract_artifacts.py
+
+      - name: Show structural impact of changing payment.timeout
+        run: python3 extract_artifacts.py --impact payment.timeout
+
+      - name: Show semantic (no-edges) impact of changing R1
+        run: python3 semantic_impact.py --target R1
+
+      - name: Show proposed (embeddings + graph propagation) impact of R1
+        run: python3 graph_propagation_impact.py --target R1 --semantic lexical
+
+      - name: Evaluate methods against labelled scenarios (precision/recall)
+        run: python3 evaluate.py --semantic lexical
+
+      - name: Upload extracted artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: |
+            artifacts.json
+            traceability_matrix.md
+            artifacts.dot
+            evaluation_results.json
+            evaluation_results.md

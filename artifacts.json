@@ -1,0 +1,180 @@
+{
+  "nodes": [
+    {
+      "id": "payment.gateway.url",
+      "type": "config",
+      "name": "payment.gateway.url",
+      "file": "configs/payment.properties",
+      "line": 6,
+      "text": "payment.gateway.url https://payments.example.com/api"
+    },
+    {
+      "id": "payment.retry.count",
+      "type": "config",
+      "name": "payment.retry.count",
+      "file": "configs/payment.properties",
+      "line": 5,
+      "text": "payment.retry.count 3"
+    },
+    {
+      "id": "payment.timeout",
+      "type": "config",
+      "name": "payment.timeout",
+      "file": "configs/payment.properties",
+      "line": 4,
+      "text": "payment.timeout 30"
+    },
+    {
+      "id": "R1",
+      "type": "requirement",
+      "name": "R1 \u2014 Payment must time out",
+      "file": "requirements/payment_requirements.md",
+      "line": 18,
+      "text": "R1 \u2014 Payment must time out A payment attempt MUST abort if the payment gateway does not respond within a configurable timeout. The timeout is controlled by the `payment.timeout` configuration property and is consumed by the payment service when it processes a payment."
+    },
+    {
+      "id": "R2",
+      "type": "requirement",
+      "name": "R2 \u2014 Payments must be retried",
+      "file": "requirements/payment_requirements.md",
+      "line": 28,
+      "text": "R2 \u2014 Payments must be retried A failed payment MUST be retried up to a configurable number of times, governed by the `payment.retry.count` configuration property."
+    },
+    {
+      "id": "R3",
+      "type": "requirement",
+      "name": "R3 \u2014 Payments target a configured gateway",
+      "file": "requirements/payment_requirements.md",
+      "line": 36,
+      "text": "R3 \u2014 Payments target a configured gateway All payments MUST be sent to the gateway identified by the `payment.gateway.url` configuration property."
+    },
+    {
+      "id": "order_service.completeOrder",
+      "type": "service",
+      "name": "completeOrder",
+      "file": "services/order_service.py",
+      "line": 11,
+      "text": "completeOrder Complete an order by charging its total via the payment service."
+    },
+    {
+      "id": "payment_service._callGateway",
+      "type": "service",
+      "name": "_callGateway",
+      "file": "services/payment_service.py",
+      "line": 53,
+      "text": "_callGateway Pretend to call the payment gateway. Returns a receipt dict."
+    },
+    {
+      "id": "payment_service.loadConfig",
+      "type": "service",
+      "name": "loadConfig",
+      "file": "services/payment_service.py",
+      "line": 12,
+      "text": "loadConfig Parse a Java-style ``.properties`` file into a dict."
+    },
+    {
+      "id": "payment_service.processPayment",
+      "type": "service",
+      "name": "processPayment",
+      "file": "services/payment_service.py",
+      "line": 31,
+      "text": "processPayment Process a single payment.\n\nConsumes the ``payment.timeout``, ``payment.retry.count`` and\n``payment.gateway.url`` configuration properties."
+    },
+    {
+      "id": "test_order.test_complete_order",
+      "type": "test",
+      "name": "test_complete_order",
+      "file": "tests/test_order.py",
+      "line": 10,
+      "text": "test_complete_order"
+    },
+    {
+      "id": "test_payment.test_process_payment",
+      "type": "test",
+      "name": "test_process_payment",
+      "file": "tests/test_payment.py",
+      "line": 10,
+      "text": "test_process_payment"
+    },
+    {
+      "id": "test_payment.test_process_payment_uses_timeout",
+      "type": "test",
+      "name": "test_process_payment_uses_timeout",
+      "file": "tests/test_payment.py",
+      "line": 17,
+      "text": "test_process_payment_uses_timeout"
+    }
+  ],
+  "edges": [
+    {
+      "from": "payment.gateway.url",
+      "to": "payment_service.processPayment",
+      "kind": "config_to_service"
+    },
+    {
+      "from": "payment.retry.count",
+      "to": "payment_service.processPayment",
+      "kind": "config_to_service"
+    },
+    {
+      "from": "payment.timeout",
+      "to": "payment_service.processPayment",
+      "kind": "config_to_service"
+    },
+    {
+      "from": "R1",
+      "to": "payment.timeout",
+      "kind": "requirement_to_config"
+    },
+    {
+      "from": "R2",
+      "to": "payment.retry.count",
+      "kind": "requirement_to_config"
+    },
+    {
+      "from": "R3",
+      "to": "payment.gateway.url",
+      "kind": "requirement_to_config"
+    },
+    {
+      "from": "order_service.completeOrder",
+      "to": "payment_service.processPayment",
+      "kind": "service_to_service"
+    },
+    {
+      "from": "payment_service.processPayment",
+      "to": "payment_service._callGateway",
+      "kind": "service_to_service"
+    },
+    {
+      "from": "payment_service.processPayment",
+      "to": "payment_service.loadConfig",
+      "kind": "service_to_service"
+    },
+    {
+      "from": "test_order.test_complete_order",
+      "to": "order_service.completeOrder",
+      "kind": "test_to_service"
+    },
+    {
+      "from": "test_payment.test_process_payment",
+      "to": "payment_service.loadConfig",
+      "kind": "test_to_service"
+    },
+    {
+      "from": "test_payment.test_process_payment",
+      "to": "payment_service.processPayment",
+      "kind": "test_to_service"
+    },
+    {
+      "from": "test_payment.test_process_payment_uses_timeout",
+      "to": "payment_service.loadConfig",
+      "kind": "test_to_service"
+    },
+    {
+      "from": "test_payment.test_process_payment_uses_timeout",
+      "to": "payment_service.processPayment",
+      "kind": "test_to_service"
+    }
+  ]
+}

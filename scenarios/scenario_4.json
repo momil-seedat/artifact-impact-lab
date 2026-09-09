@@ -1,0 +1,11 @@
+{
+  "id": "scenario_4",
+  "title": "Function Change (leaf)",
+  "change_type": "service",
+  "changed": "order_service.completeOrder",
+  "change_description": "order_service.completeOrder",
+  "source": "constructed from dependency structure; edit to taste",
+  "actual_impact": [
+    "test_order.test_complete_order"
+  ]
+}

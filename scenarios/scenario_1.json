@@ -1,0 +1,18 @@
+{
+  "id": "scenario_1",
+  "title": "Requirement Change",
+  "change_type": "requirement",
+  "changed": "R1",
+  "change_description": "Payment must time out",
+  "source": "ground-truth labelled by author",
+  "actual_impact": [
+    "payment.timeout",
+    "payment_service.processPayment",
+    "payment_service.loadConfig",
+    "payment_service._callGateway",
+    "order_service.completeOrder",
+    "test_payment.test_process_payment",
+    "test_payment.test_process_payment_uses_timeout",
+    "test_order.test_complete_order"
+  ]
+}
